@@ -8,8 +8,9 @@ import com.example.tictactoe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    lateinit var first: String
+    lateinit var second: String
     lateinit var board: Array<Array<Button>>
-    val s1 = "PLAYER "
     val s2 = "'S TURN"
     val s3 = " HAS WON!"
     val over="GAME OVER!"
@@ -20,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val i=intent
+        first = i.getStringExtra("First").toString().uppercase()
+        second = i.getStringExtra("Second").toString().uppercase()
         board= arrayOf(arrayOf(binding.btn1,binding.btn2,binding.btn3),
             arrayOf(binding.btn4,binding.btn5,binding.btn6),
             arrayOf(binding.btn7,binding.btn8,binding.btn9))
@@ -31,19 +35,20 @@ class MainActivity : AppCompatActivity() {
             for(j in 0..2){
                 board[i][j].setOnClickListener {
                     board[i][j].apply{
-                        var s = if(!f) "O" else "X"
+                        var s = if(!f) second else first
                         isEnabled=false
-                        var ss = if(f) "O" else "X"
-                        text=ss
-                        binding.txt1.setText(s1+s+s2)
+                        var ss = if(f) second else first
+                        var ss1 = if(f) "O" else "X"
+                        text=ss1
+                        binding.txt1.text = s+s2
                         cnt++
                         boardval[i][j]=if(f) 1 else 0
                         f=!f
                         var x=won()
                         when(x){
                             1->{
-                                binding.txt2.setText(s1+ss+s3)
-                                binding.txt1.setText(over)
+                                binding.txt2.text = ss+s3
+                                binding.txt1.text = over
                                 for(i in 0..2){
                                     for(j in 0..2){
                                         board[i][j].isEnabled=false
@@ -77,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun reset() {
-        binding.txt1.setText(s1+'X'+s2)
+        binding.txt1.setText(first+s2)
         binding.txt2.text=""
         f=false
         cnt=0
